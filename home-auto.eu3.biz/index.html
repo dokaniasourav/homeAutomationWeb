@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>REDIRECTING</title>
+        <link rel="stylesheet" href="Rest2/css/bootstrap.css">
+    </head>
+
+    <body>
+        <div class="container">
+            <h1 class='page-header'>You will be automatically redirected to Site 2 in <span id="c">5</span> Secosnds
+            </h1>
+            <button class='btn btn-primary' onclick="reset()">WAIT</button>
+            <button class='btn btn-lg btn-accent'><a href="/Rest2/index.html">Go to Test Site 2</a></button>
+            <button class='btn btn-lg btn-accent'><a href="/Rest/test.html">Go to Test Site 1</a></button>
+            <p> The two main versions are Rest and Rest2 and the second one is the latest version with all functions
+                implemented.
+                <br>
+                You can manually enter URL quries or write them in the text area of the test site
+            </p>
+            <script>
+                start = new Date();
+                init = document.querySelector("#c").textContent * 1;
+                function reset() {
+                    let div = document.querySelector("#c");
+                    div.textContent = init;
+                }
+                setInterval(function () {
+                    let div = document.querySelector("#c");
+                    let count = init + (start - new Date()) / 1000;
+                    if (count < 0.4) {
+                        window.location.href = "./Rest2/index.html";
+                        count = 0;
+                    }
+                    div.textContent = count.toFixed(0);
+                }, 10);
+            </script>
+        </div>
+    </body>
+
+</html>

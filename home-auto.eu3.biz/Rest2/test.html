@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Auto Test</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <style>
+        body {
+            color: #eeeeee;
+            background: #2e3133;
+        }
+
+        textarea {
+            position: absolute;
+            width: 33%;
+            left: 10px;
+            min-height: 350px;
+            resize: none;
+            font-size: 20px;
+            background: #100404;
+            color: #ffffff;
+        }
+
+        ul {
+            border: 1px dashed gray;
+        }
+
+        .lists {
+            margin-top: -50px;
+            margin-right: -25px;
+            padding: 0;
+            width: 68%;
+            float: right;
+        }
+
+        .but-group {
+            border: 1px solid #999;
+            border-radius: 5px;
+            margin: 3px;
+            padding-top: 5px;
+        }
+
+        .but-list {
+            list-style: none;
+            display: inline-block;
+            margin: 0 1%;
+            width: 80%;
+            height: 100%;
+            padding: 1px;
+        }
+
+        li>.btn {
+            display: block;
+            width: 100%;
+            padding: 5px 10px;
+            text-align: center;
+            margin-bottom: 2px;
+            font-size: 18px;
+            color: #000;
+        }
+
+        li>.btn-lg {
+            margin-bottom: 10px;
+            margin-top: -100px;
+        }
+
+        li {
+            display: inline-block;
+            margin: 2px;
+        }
+
+        .btn:hover .btn {
+            background: #5bc0de;
+        }
+
+        .request-group {
+            padding: 20px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #response {
+            background: #100404;
+            color: #ff2c40;
+        }
+
+        h2 {
+            display: inline-block;
+        }
+
+        .page-header {
+            padding-top: 0;
+            margin: -4px 5px 5px 5px;
+
+        }
+
+        h4 {
+            margin: 0 0%;
+            padding: 1%;
+            display: inline-block;
+            width: 15%;
+            min-width: 50px;
+            line-height: 15px;
+        }
+
+        #bigBtn {
+            width: 100%;
+        }
+
+        .string {
+            color: #1bd4ee;
+        }
+
+        .number {
+            color: orange;
+        }
+
+        .boolean {
+            color: dodgerblue;
+        }
+
+        .null {
+            color: purple;
+        }
+
+        .key {
+            color: #f3ff00;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div id="response-group">
+            <h2 class="page-header">Response: </h2>
+            <pre id="response">
+                Something
+            </pre>
+        </div>
+    </div>
+</body>
+
+</html>

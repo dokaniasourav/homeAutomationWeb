@@ -1,0 +1,104 @@
+
+
+ToDo:
+
+1. Need to add trigger on users table to auto_populate users_details on INSERT command
+    -- Not doing now, can be added.
+2. Adding the modules authorisation routine, using the modules table and the unique key for Auth
+    -- Done
+3. Add status messages to outputs
+    -- TBD
+4. Add module function needs some changes
+    -- Done for most part. No more change requirements now
+5. Run unit test on the php code
+    -- TBD
+6. See all php warnings and fix them
+    -- Done for now
+7. Code read-through to understand everything
+    -- Done for most part
+8. pay attention to #defines. No constants should be present in the program
+    -- Done for most part
+9. What Collation should we use. Need to decide on this later
+
+10. Need to manage history for all tables. No changes can be made without a log
+
+
+
+Bugs:
+1. User can add as many login keys using the login as it wants now. Need to limit this using USER_AGENT selection
+2. Problems in Adding new module when it already exists
+3. getRequestPrams needs isset methods
+4. Need to manage quote for session key queries
+
+Done:
+
+
+
+
+/******************** Database codes ***************************/
+
+DROP PROCEDURE IF EXISTS deviceAdder;
+DELIMITER ##
+CREATE PROCEDURE deviceAdder(IN m_id TINYINT, IN d_id TINYINT, IN type TINYINT)
+BEGIN
+    SET @mID := m_id;
+    SET @dID := d_id;
+    SET @typ := type;
+    SET @nme := CONCAT('Device ', @dID);
+    SET @det := CONCAT('New device ', @dID);
+--  SET @tName := CONCAT('module_',LPAD(@mID,5,'0'));
+
+    SET @sql_text := CONCAT('INSERT into `devices` (module_id, device_id, name, type, detail)
+                             VALUES (\'', @mID,'\', \'',@dId ,'\', \'', @nme,'\', \'',
+                             @typ,'\', \'', @det,'\')');
+    PREPARE stmt from @sql_text;
+    EXECUTE stmt;
+    CALL countRows(@mID, @Count);
+    SET @sql_text := CONCAT('UPDATE `modules` SET `num_of_device` = ',
+                            @Count,' WHERE `modules`.`module_id`=',@mID);
+    PREPARE stmt from @sql_text;
+    EXECUTE stmt;
+END ##
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS countRows;
+DELIMITER //
+CREATE PROCEDURE countRows(IN m_id TINYINT, OUT COUNT TINYINT)
+BEGIN
+    SET @t   := 'devices';
+    SET @mId := m_id;
+    SET @s := CONCAT('SELECT COUNT(*) INTO @OUT FROM `',@t,'` WHERE `module_id` = ',@mId);
+    PREPARE stmt from @s;
+    EXECUTE stmt;
+    SET COUNT := @OUT;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS updateCount;
+DELIMITER ##
+CREATE PROCEDURE updateCount(IN m_id TINYINT)
+BEGIN
+    SET @mID := m_id;
+    CALL countRows(@mID, @Count);
+    SET @sql_text := CONCAT('UPDATE `modules` SET `num_of_device` = ',
+                            @Count,' WHERE `modules`.`module_id`=',@mID);
+    PREPARE stmt from @sql_text;
+    EXECUTE stmt;
+END ##
+DELIMITER ;
+
+CALL countRows(1, @count); SELECT @count AS COUNT;
+
+CALL countRows(1, @count); SELECT @count AS COUNT
+
+DROP PROCEDURE IF EXISTS countRowsOut;
+DELIMITER //
+CREATE PROCEDURE countRowsOut(IN m_id TINYINT)
+BEGIN
+    SET @mID := m_id;
+    CALL countRows(@mID, @count);
+    SELECT @count AS COUNT;
+END //
+DELIMITER ;
+
+CALL countRowsOut(5);

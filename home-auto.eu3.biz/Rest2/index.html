@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Test PHP</title>
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <style>
+            body {
+                color: #eeeeee;
+                background: #2e3133;
+            }
+
+            textarea {
+                position: absolute;
+                width: 33%;
+                left: 10px;
+                min-height: 350px;
+                resize: none;
+                font-size: 20px;
+                background: #100404;
+                color: #ffffff;
+            }
+
+            ul {
+                border: 1px dashed gray;
+            }
+
+            .lists {
+                margin-top: -50px;
+                margin-right: -25px;
+                padding: 0;
+                width: 68%;
+                float: right;
+            }
+
+            .but-group {
+                border: 1px solid #999;
+                border-radius: 5px;
+                margin: 4px 8px;
+                padding-top: 5px;
+            }
+
+            .but-list {
+                list-style: none;
+                display: inline-block;
+                margin: 0 1%;
+                width: 80%;
+                height: 100%;
+                padding: 1px;
+            }
+
+            li>.btn {
+                display: block;
+                width: 100%;
+                padding: 7px 12px;
+                text-align: center;
+                margin-bottom: 2px;
+                font-size: 18px;
+                color: #000;
+            }
+
+            li>.btn-lg {
+                margin-bottom: 10px;
+                margin-top: -100px;
+            }
+
+            li {
+                display: inline-block;
+                margin: 2px;
+            }
+
+            .smlBtn:hover {
+                background: #5fa6e7;
+                color: #fff;
+                font-weight: 500;
+            }
+
+            .request-group {
+                padding: 20px;
+                height: 100%;
+                overflow: hidden;
+            }
+
+            #response {
+                background: #100404;
+                color: #ff2c40;
+            }
+
+            h2 {
+                display: inline-block;
+                font-size: 50px;
+            }
+
+            .page-header {
+                padding-top: 0;
+                margin: -4px 5px 5px 5px;
+            }
+
+            h4 {
+                margin: 0 0%;
+                padding: 1%;
+                display: inline-block;
+                width: 15%;
+                min-width: 50px;
+                line-height: 15px;
+            }
+
+            #bigBtn {}
+
+
+            #bigBtn .string {
+                color: #1bd4ee;
+            }
+
+            .number {
+                color: orange;
+            }
+
+            .boolean {
+                color: dodgerblue;
+            }
+
+            .null {
+                color: purple;
+            }
+
+            .key {
+                color: #f3ff00;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container-fluid">
+            <div class="request-group">
+                <h2 style="margin-top: 20px;">Request</h2><br>
+                <textarea id="request"></textarea>
+                <div class="lists">
+                    <div class="but-group">
+                        <h4>Get Device</h4>
+                        <ul id="actionDevice" class="list-inline but-list"></ul>
+                        <br>
+                        <h4>Set Device</h4>
+                        <ul id="actionDevice2" class="list-inline but-list"></ul>
+                    </div>
+                    <div class="but-group">
+                        <h4>Get Modules</h4>
+                        <ul id="actionModule" class="list-inline but-list"></ul>
+                        <br>
+                        <h4>Set Modules</h4>
+                        <ul id="actionModule2" class="list-inline but-list"></ul>
+                    </div>
+                    <div class="but-group">
+                        <h4>Get Users</h4>
+                        <ul id="actionUser" class="list-inline but-list"></ul>
+                        <h4>Set Users</h4>
+                        <ul id="actionUser2" class="list-inline but-list"></ul>
+                    </div>
+                    <div class="but-group">
+                        <h4>ADD</h4>
+                        <ul id="actionAdd" class="list-inline but-list"></ul>
+                        <br>
+                        <h4>DELETE</h4>
+                        <ul id="actionDelete" class="list-inline but-list"></ul>
+                    </div>
+                </div>
+            </div>
+            <div id="bigBtn">
+                <button id="submit_post" class="btn btn-lg btn-primary">
+                    POST REQUEST
+                </button>
+            </div>
+            <br>
+            <div id="response-group">
+                <h2 class="page-header">Response: </h2>
+                <pre id="response" wrap="hard"></pre>
+            </div>
+            <div id="error-group">
+                <!--<h2 class="page-header">Error: </h2>-->
+                <div class="alert alert-danger" id="error">
+                    SOME MORE ERROR MESSEGES
+                </div>
+                <div id="error2">
+                    SOME ERROR MESSEGE
+                </div>
+            </div>
+        </div>
+        <script src="jquery/jquery-1.8.1.js"></script>
+        <script>
+            $(function () {
+                let errElement = $("#error");
+                let errElement2 = $("#error2");
+                let respElement = $("#response");
+                let reqElement = $("#request");
+                let responseGroup = $('#response-group');
+                responseGroup.hide();
+                errElement.hide();
+                errElement2.hide();
+                let getDev = {
+                    Everything: { action: "getDevEverything", key: "12345678", modID: "1" },
+                    All_Active: { action: "getDevAllActive", key: "12345678", modID: "1" },
+                    All_States: { action: "getDevStateAll", key: "12345678", modID: "1" },
+                    Name: { action: "getDevName", key: "12345678", modID: "1", devID: "1" },
+                    State: { action: "getDevState", key: "12345678", modID: "1", devID: "1" },
+                    Detail: { action: "getDevDetail", key: "12345678", modID: "1", devID: "1" },
+                    Type: { action: "getDevType", key: "12345678", modID: "1", devID: "1" },
+                    Current: { action: "getDevCurr", key: "12345678", modID: "1", devID: "1" }
+                };
+                let getMod = {
+                    All: { action: "getModAll", key: "12345678" },
+                    AllMe: { action: "getModAllMe", key: "12345678", modID: "1" },
+                    Name: { action: "getModName", key: "12345678", modID: "1" },
+                    NumDev: { action: "getModNumDev", key: "12345678", modID: "1" },
+                    Current: { action: "getModCurr", key: "12345678", modID: "1" },
+                    Power: { action: "getModPower", key: "12345678", modID: "1" },
+                    Desc: { action: "getModDesc", key: "12345678", modID: "1" },
+                    Config: { action: "getModConf", key: "12345678", modID: "1"/*, conf: "Connfig Here", cred: "Creds Here", pinMap: "Pin Map Here"*/ },
+                    Pin_map: { action: "getModPinMap", key: "12345678", modID: "1"/*, conf: "Connfig Here", cred: "Creds Here", pinMap: "Pin Map Here"*/ },
+                    Cred: { action: "getModCred", key: "12345678", modID: "1"/*, conf: "Connfig Here", cred: "Creds Here", pinMap: "Pin Map Here"*/ }
+                };
+                let getUser = {
+                    All: { action: "getUserAll", key: "12345678" },
+                    FullName: { action: "getUserFullName", key: "12345678" },
+                    Add: { action: "getUserAdd", key: "12345678" },
+                    Pic: { action: "getUserPic", key: "12345678" },
+                    Theme: { action: "getUserTheme", key: "12345678" },
+                    Mail: { action: "getUserMail", key: "12345678" },
+                    Mob: { action: "getUserMob", key: "12345678" },
+                    Bio: { action: "getUserBio", key: "12345678" }
+                };
+                let setMod = {
+                    Name: { action: "setModName", key: "12345678", modID: "1", name: "New Module Name" },
+                    Desc: { action: "setModDesc", key: "12345678", modID: "1", desc: "New Module Description" },
+                    PinMap: { action: "setModPins", key: "12345678", modID: "1", pinMap: "PIN MAP" },
+                    Config: { action: "setModConf", key: "12345678", modID: "1", conf: "Config Data" },
+                    Current: { action: "setModCurr", key: "12345678", modID: "1", mod_curr: "23.55", mod_phase: "26.8" },
+                    Power: { action: "setModPower", key: "12345678", modID: "1", mod_power: "18.56" },
+                    Credential: { action: "setModCred", key: "12345678", modID: "1", cred: "Credential JSON" },
+                    Firmware: { action: "setModFirm", key: "12345678", modID: "1", firm: "Firmware data" },
+                    OTA_Time: { action: "setModOta", key: "12345678", modID: "1", lastOta: "Last OTA Date" }
+                };
+                let setDev = {
+                    Activation: { action: "setDevActivation", key: "12345678", modID: "1", devID: "1", active: "1" },
+                    Name: { action: "setDevName", key: "12345678", modID: "1", devID: "1", name: "My New Name" },
+                    State: { action: "setDevState", key: "12345678", modID: "1", devID: "1", state: "0", up_at: "1589139674" },
+                    Detail: { action: "setDevDetail", key: "12345678", modID: "1", devID: "1", desc: "New Detail to set for Device" },
+                    Type: { action: "setDevType", key: "12345678", modID: "1", devID: "1", devType: "TYPE_VALUE" },
+                    Current: { action: "setDevCurr", key: "12345678", modID: "1", devID: "1", dev_curr: "12.32", dev_phase: "13.65" }
+                };
+                let setUser = {
+                    FullName: { action: "setUserFullName", key: "12345678", fName: "First Name", mName: "Middle Name", lName: "Last Name" },
+                    Add: { action: "setUserAdd", key: "12345678", address: "New Address for User" },
+                    Pic: { action: "setUserPic", key: "12345678", pic: "New Picture" },
+                    Theme: { action: "setUserTheme", key: "12345678", theme: "45" },
+                    Mail: { action: "setUserMail", key: "12345678", mail: "New Email Id" },
+                    Mob: { action: "setUserMob", key: "12345678", mob: "Add new Number" },
+                    Bio: { action: "setUserBio", key: "12345678", about: "A new personal about field for USER" }
+                };
+                let add = {
+                    Login: { action: "login", user: "UserNameHere", pass: "PasswordHere" },
+                    // ModLogin :   {action: "moduleLogin",mac: "MacAddress",   key:  "12345678"},
+                    Add_Module: { action: "addModule", key: "12345678", mac: "PUT_MAC_HERE", user: "UserEmail", numDev: "3" },
+                    Add_Device: { action: "addDevice", key: "12345678", modID: "1", devID: "1", name: "DeviceName", devType: "3" },
+                    Add_User: { action: "addUser", user: "userNameHere", pass: "123456789A" }
+                };
+                let del = {
+                    SignOut: { action: 'signOut', key: '12345678' },
+                    Delete_Device: { action: "removeDevice", key: "12345678", modID: "1", devID: "1" },
+                    Delete_Module: { action: "removeModule", key: "12345678", modID: "1" },
+                    Delete_User: { action: "deleteUser" }
+                };
+
+                let array_actions = [getDev, getMod, getUser, setDev, setMod, setUser, add, del];
+
+                let array_classes = ['getDev', 'getMod', 'getUser', 'setDev', 'setMod', 'setUser', 'add', 'del'];
+                let array_tags = ['#actionDevice', '#actionModule', '#actionUser', '#actionDevice2', '#actionModule2', '#actionUser2', '#actionAdd', '#actionDelete'];
+                for (j = 0; j < array_actions.length; j++) {
+                    for (let key in array_actions[j]) {
+                        $(array_tags[j]).append('<li><button class="btn smlBtn ' + array_classes[j] + '" prop="' + j + '">' + key + '</button></li>');
+                    }
+                }
+
+                for (j = 0; j < array_classes.length; j++) {
+                    console.log(array_classes[j]);
+                    $('.' + array_classes[j]).click(function () {
+                        //console.log(array_actions[parseInt($(this).attr('prop'))]);
+                        reqElement.val(JSON.stringify(array_actions[parseInt($(this).attr('prop'))][$(this).html()], null, '  '));
+                    });
+                }
+
+                $("#submit_post").click(function () {
+                    let json = json_handle();
+                    if (json === null) {
+                        responseGroup.hide(250);
+                        return null;
+                    }
+                    sendReq("POST", json);
+                });
+                // $("#submit_get").click(function () {
+                //     let json = json_handle();
+                //     sendReq("GET", json);
+                // });
+                function json_handle() {
+                    try {
+                        let ugly = reqElement.val();
+                        let obj = JSON.parse(ugly);
+                        let pretty = JSON.stringify(obj, null, '  ');
+                        reqElement.val(pretty);
+                        errElement.hide(200);
+                        return JSON.parse(pretty);
+                    } catch (e) {
+                        errElement.show(200).text(e);
+                        return null;
+                    }
+                }
+                function sendReq(type, data) {
+                    responseGroup.hide(50);
+                    console.log('SENT ' + type + ' REQUEST');
+                    $.ajax({
+                        url: "./index.php",
+                        type: type,
+                        data: data,
+                    }).done(function (data) {
+                        try {
+                            console.log(data);
+                            let obj = JSON.parse(data);
+                            let str = JSON.stringify(obj, null, '  ');
+                            str = syntaxHighlight(str);
+                            respElement.html(str);
+                            errElement2.html('').hide(100);
+                            responseGroup.show(100);
+                        } catch (e) {
+                            console.log("Error : " + e);
+                            responseGroup.hide(100);
+                            errElement2.show(100).html(data);
+                        }
+                    }).fail(function (err, status) {
+                        console.log("Data Error: ");
+                        console.log(err);
+                        console.log(status);
+                        errElement2.show(200).val(err);
+                    }).always(function () {
+                        console.log("Completed request sendning");
+                    });
+                }
+                function syntaxHighlight(json) {
+                    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                        let cls = 'number';
+                        if (/^"/.test(match)) {
+                            if (/:$/.test(match)) {
+                                cls = 'key';
+                            } else {
+                                cls = 'string';
+                            }
+                        } else if (/true|false/.test(match)) {
+                            cls = 'boolean';
+                        } else if (/null/.test(match)) {
+                            cls = 'null';
+                        }
+                        return '<span class="' + cls + '">' + match + '</span>';
+                    });
+                }
+            });
+        </script>
+    </body>
+
+</html>

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Test PHP</title>
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <style>
+    html,
+    body {
+      height: 100%;
+      background: #250505;
+      color: aliceblue;
+    }
+
+    .button_group {
+      display: flex;
+      margin: 40px;
+      min-width: 50px;
+    }
+
+    .button_div {
+      margin: 30px;
+    }
+
+    button {
+      margin-top: 25px;
+      display: block;
+      padding: 20px;
+      font-size: 100px;
+    }
+
+    .container {
+      height: 100%;
+      text-align: center;
+    }
+
+    .btn-lg {
+      font-size: 30px;
+      padding: 20px 32px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class='page-header'>Test your devices here</h1>
+    <div class="button_group">
+      <div class="button_div">
+        <!--div class="description">This is mah module</div-->
+        <button value="4" class="btn btn-primary btn-lg"> ON </button>
+      </div>
+      <div class="button_div">
+        <button value="5" class="btn btn-primary btn-lg"> ON </button>
+      </div>
+      <div class="button_div">
+        <button value="6" class="btn btn-primary btn-lg"> ON </button>
+      </div>
+    </div>
+  </div>
+  <script src="jquery/jquery-1.8.1.js"></script>
+  <script>
+    $(function () {
+      var state = true;
+
+      $('.btn').click(function () {
+        sendReq($(this));
+      });
+
+      function sendReq(element) {
+        let devID = element.val();
+
+        var state = (element.html().toString().trim() == 'ON') ? 0 : 1;
+        console.log(devID);
+        console.log(state);
+        console.log(state == "ON");
+        $.ajax({
+          url: "./index.php",
+          type: 'POST',
+          data: { action: "setDevState", key: "123456789", 'modID': "20", 'devID': devID, 'state': state },
+        })
+          .done(function (data) {
+            console.log("Data : ");
+            console.log(data);
+            try {
+              if (data.status.code == 202) {
+                state = data.data.set.state == 1 ? true : false;
+                if (state) {
+                  element.html('ON');
+                  element.removeClass('btn-danger');
+                  element.addClass('btn-primary');
+                } else {
+                  element.html('OFF');
+                  element.removeClass('btn-primary');
+                  element.addClass('btn-danger');
+                }
+              } else {
+                console.log('Error Code');
+              }
+            } catch (e) {
+              console.log("Error : " + e);
+            }
+          })
+          .fail(function (err, status) {
+            console.log("Data Error: ");
+            console.log(err);
+            console.log(status);
+          })
+          .always(function () {
+            console.log("complete");
+          });
+      }
+
+    });
+  </script>
+</body>
+
+</html>
